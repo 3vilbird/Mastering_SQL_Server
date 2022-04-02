@@ -38,6 +38,36 @@ from tblEmployee E
 
 
 
+
+
+
+
+
+-- how ot replace the null values
+
+select ISNULL(null,'no manager') as manager
+-- COAL ESC -E
+select COALESCE(null,'no manager') as manager
+
+-- CASE expresion WHEN '' ELSE '' END
+
+
+select E.Name as Employee , ISNULL(M.managerId,0) as Manager
+
+from tblEmployee E
+
+    left join tblEmployee M on E.managerId = M.empId
+
+
+    select E.Name as Employee ,CASE WHEN M.managerId IS NULL  THEN 'NO MANAGER' ELSE  M.managerId   as Manager
+
+from tblEmployee E
+
+    left join tblEmployee M on E.managerId = M.empId
+
+
+
+
 -- self innner join
 
 
