@@ -59,3 +59,83 @@ Select dbo.Age( dbo.Age('10/08/1982'))
 -- INLINE TABLE VALUED FUNCTIONS
 
 
+--  a scalar function, returns a single value. on the other hand, an 
+--  Inline Table Valued function, 
+-- return a table. 
+
+
+-- CREATE FUNCTION Function_Name(@Param1 DataType, @Param2 DataType..., @ParamN DataType)
+-- RETURNS TABLE
+-- AS
+-- RETURN (Select_Statement)
+
+
+
+CREATE FUNCTION fn_EmployeesByGender(@Gender nvarchar(10))
+RETURNS TABLE
+AS
+RETURN (Select Id, Name, DateOfBirth, Gender, DepartmentId
+from tblEmployees
+where Gender = @Gender)
+
+
+
+-- 1. We specify TABLE as the return type, instead of any scalar data type
+
+-- 2. The function body is not enclosed between BEGIN and END block. Inline 
+--    table valued function body, cannot have BEGIN and END block.
+
+-- . The structure of the table that gets returned, is determined by the SELECT statement with in the function.
+
+
+-- Calling the user defined function
+-- Select * from fn_EmployeesByGender('Male')
+
+-- Where can we use Inline Table Valued functions
+-- 1. Inline Table Valued functions can be used to achieve the functionality of parameterized views. We will talk about views, in a later session.
+-- 2. The table returned by the table valued function, can also be used in joins with other tables.
+
+
+
+Select Name, Gender, DepartmentName
+from fn_EmployeesByGender('Male') E
+    Join tblDepartment D on D.Id = E.DepartmentId
+
+
+
+
+-- multi values table function
+
+
+-- Multi-statement Table Valued function(MSTVF):
+Create Function fn_MSTVF_GetEmployees()
+Returns @Table Table (Id int,
+    Name nvarchar(20),
+    DOB Date)
+as
+Begin
+    Insert into @Table
+    Select Id, Name, Cast(DateOfBirth as Date)
+    From tblEmployees
+
+    Return
+End
+
+
+-- dofference between table vlaued and multi statement tbale valued funxtion
+-- https://csharp-video-tutorials.blogspot.com/2012/09/multi-statement-table-valued-functions.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
